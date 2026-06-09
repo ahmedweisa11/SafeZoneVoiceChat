@@ -1,37 +1,40 @@
 import { AccessToken } from "livekit-server-sdk";
 
 export const handler = async (event) => {
-
   try {
+    const identity =
+      event.queryStringParameters?.identity || "guest";
 
-    const identity = event.queryStringParameters.identity;
+    const apiKey = process.env.LIVEKIT_API_KEY;
+    const apiSecret = process.env.LIVEKIT_API_SECRET;
 
-    const at = new AccessToken(
-      process.env.LIVEKIT_API_KEY,
-      process.env.LIVEKIT_API_SECRET,
-      { identity }
-    );
+    if (!apiKey || !apiSecret) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Missing env vars" })
+      };
+    }
 
-    at.addGrant({
+    const token = new AccessToken(apiKey, apiSecret, {
+      identity
+    });
+
+    token.addGrant({
       roomJoin: true,
       room: "safezone"
     });
 
-    const token = await at.toJwt();
-
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        token,
-        url: process.env.LIVEKIT_URL
+        token: await token.toJwt()
       })
     };
 
-  } catch (e) {
+  } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: e.message })
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
