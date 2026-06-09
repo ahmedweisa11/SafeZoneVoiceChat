@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeZone Voice Chat</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="topbar">
+  <div id="status">Disconnected</div>
+  <div id="onlineCount">0 online</div>
+</div>
+
+<div class="container">
+
+  <input id="name" placeholder="Enter name">
+
+  <button onclick="joinRoom()">Join Room</button>
+
+  <button id="micBtn" disabled>🎤 Mute/Unmute</button>
+
+  <div id="users"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
