@@ -1,8 +1,8 @@
 {
   "name": "safezone-voice",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
-    "livekit-server-sdk": "^2.0.0"
+    "livekit-server-sdk": "^2.7.0"
   }
 }
