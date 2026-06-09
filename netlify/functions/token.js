@@ -1,6 +1,6 @@
-import { AccessToken } from "livekit-server-sdk";
+const { AccessToken } = require("livekit-server-sdk");
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   try {
     const identity =
       event.queryStringParameters?.identity || "guest";
@@ -11,30 +11,37 @@ export const handler = async (event) => {
     if (!apiKey || !apiSecret) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Missing env vars" })
+        body: JSON.stringify({
+          error: "Missing LiveKit env variables"
+        })
       };
     }
 
-    const token = new AccessToken(apiKey, apiSecret, {
+    const at = new AccessToken(apiKey, apiSecret, {
       identity
     });
 
-    token.addGrant({
+    at.addGrant({
       roomJoin: true,
       room: "safezone"
     });
 
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        token: await token.toJwt()
+        token: await at.toJwt()
       })
     };
 
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message })
+      body: JSON.stringify({
+        error: err.message
+      })
     };
   }
 };
